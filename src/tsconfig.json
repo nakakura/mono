@@ -5,8 +5,9 @@
         "target": "es6",
         "module": "commonjs",
         "noImplicitAny": true,
-        "preserveConstEnums": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     },
     "atom": {
         "rewriteTsconfig": true

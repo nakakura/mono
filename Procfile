@@ -1,1 +1,1 @@
-web: node bin/app
+web: bin/hubot -a slack

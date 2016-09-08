@@ -3,6 +3,7 @@ import * as mysql from 'mysql';
 import {MySqlInstance} from '../../infra/mysql';
 import {kernel} from "../../bindings/inversify_initialize";
 import {TYPES, MySqlIf} from "../../bindings/entities";
+import * as _ from 'lodash';
 
 export class Location{
     public id = -1;
@@ -37,9 +38,38 @@ export class Location{
 
     public store(cb: (err: Error, rows: any[], fields: any[]) => void){
         if(this.id === -1){
-            this.createNewLocation(cb);
+            this.createNewLocation((err: Error, rows: any[], fields: any[]) =>{
+                Location.searchOrCreate(this.title, (loc: Location)=>{
+                    this.id = loc.id;
+                    cb(err, rows, [this.id]);
+                });
+            });
         } else{
-            this.updateLocation(cb);
+            this.updateLocation((err: Error, rows: any[], fields: any[]) =>{
+                cb(err, rows, [this.id]);
+            });
+        }
+    }
+
+    public static lookup(locationTitle: string, cb: (loc: Location[])=>void){
+        const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
+        mysql.query('SELECT * FROM `locations` WHERE `title` LIKE ?', (error, rows, fields)=>{
+            if(rows.length > 0){
+                const mapped: Location[] = _.map(rows, (row: any)=>{
+                    return new Location(row.title, row.location_id);
+                });
+                cb(mapped);
+            } else{
+                cb([]);
+            }
+        }, [`%${locationTitle}%`]);
+    }
+
+    public delete(cb: (err: Error, rows: any[], fields: any[])=> void){
+        if(this.id === -1) cb(new Error("not exist"), [], []);
+        else{
+            const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
+            mysql.query('delete FROM `locations` WHERE `location_id` = ?', cb, [this.id]);
         }
     }
 

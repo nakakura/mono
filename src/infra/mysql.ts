@@ -28,13 +28,14 @@ export class MySqlInstance implements MySqlIf{
 
   private static _getMySqlUri(){
     const env = process.env;
+      console.log(env);
     if("VCAP_SERVICES" in env){
       const item = JSON.parse(env["VCAP_SERVICES"]);
       console.log(item);
       console.log(item['mysql-5.5'][0]['tags']);
       console.log(item['mysql-5.5'][0]['credentials']);
       if("mysql-5.5" in item){
-        return item['mysql-5.5'][0]['credentials']['uri'] + "&charset=UTF8_GENERAL_CI";
+        return item['mysql-5.5'][0]['credentials']['uri'];// + "&charset=UTF8_GENERAL_CI";
       }
     }
 
