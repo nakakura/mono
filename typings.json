@@ -1,0 +1,19 @@
+{
+  "name": "es6-babel-react-flux-karma",
+  "version": false,
+  "dependencies": {
+    "body-parser": "registry:npm/body-parser#1.15.2+20160815132839",
+    "chai": "registry:npm/chai#3.5.0+20160723033700",
+    "es6-promise": "registry:npm/es6-promise#3.0.0+20160723033700",
+    "express": "registry:npm/express#4.14.0+20160815112707",
+    "lodash": "registry:npm/lodash#4.0.0+20160723033700",
+    "sinon": "registry:npm/sinon#1.16.0+20160723033700"
+  },
+  "globalDependencies": {
+    "mocha": "registry:dt/mocha#2.2.5+20160720003353",
+    "mysql": "registry:dt/mysql#0.0.0+20160316155526",
+    "node": "registry:dt/node#6.0.0+20160826120425",
+    "socket.io": "registry:dt/socket.io#1.4.4+20160317120654",
+    "superagent": "registry:dt/superagent#2.0.0+20160811085415"
+  }
+}

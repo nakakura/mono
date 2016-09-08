@@ -1,0 +1,14 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "jsx": "preserve",
+        "target": "es6",
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "preserveConstEnums": true,
+        "sourceMap": true
+    },
+    "atom": {
+        "rewriteTsconfig": true
+    }
+}
