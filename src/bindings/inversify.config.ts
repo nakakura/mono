@@ -16,7 +16,7 @@ kernel.bind<MySqlIf>(TYPES.MySqlIf).toDynamicValue(() => {
 kernel.bind<interfaces.Factory<LocationIf>>("Factory<LocationIf>").toFactory<LocationIf>(() => {
     return (key: any, cb: (loc: Location)=>void) => {
         if (typeof key === "string") {
-            Location.searchOrCreate('nkhr4', cb);
+            Location.searchOrCreate(key, cb);
         } else if (typeof key === "number") {
             Location.load(key, cb);
         } else cb(null);

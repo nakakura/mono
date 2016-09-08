@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 export class Location{
     public id = -1;
 
-    constructor(private title: string, id?: number){
+    constructor(public title: string, id?: number){
         if(id) this.id = id;
     }
 

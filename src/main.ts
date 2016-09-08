@@ -4,21 +4,19 @@ import {LocationFlow} from "./domain/location_flow";
 import {kernel} from './bindings/inversify.config';
 import * as _ from 'lodash';
 
+const flow = new LocationFlow();
 export class Mono{
   constructor(){
     const k = kernel;
-    const item = new Location("なかはら");
-    item.store((err, rows, fields)=> {
-      const flow = new LocationFlow();
-      flow.lookup("なかはら", (items: Location[])=> {
-        console.log(items);
-        console.log("にほんごA;");
-      });
-    });
-
   }
 
-
+  exec(user: string, args: string[], msg: any){
+    console.log(user);
+    console.log(args);
+    flow.command(args, (message: string)=>{
+      msg.send(message);
+    });
+  }
 }
 
 /*
