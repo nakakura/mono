@@ -15,6 +15,7 @@ export class Mono{
         console.log("にほんごA;");
       });
     });
+
   }
 
 
