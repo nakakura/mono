@@ -10,6 +10,10 @@
     "sinon": "registry:npm/sinon#1.16.0+20160723033700"
   },
   "globalDependencies": {
+    "eventemitter2": "registry:dt/eventemitter2#0.14.4+20160818004139",
+    "inversify": "registry:dt/inversify#2.0.0-rc.12+20160830145920",
+    "inversify-binding-decorators": "registry:dt/inversify-binding-decorators#1.0.0+20160830145920",
+    "inversify-inject-decorators": "registry:dt/inversify-inject-decorators#1.0.0+20160830145920",
     "mocha": "registry:dt/mocha#2.2.5+20160720003353",
     "mysql": "registry:dt/mysql#0.0.0+20160316155526",
     "node": "registry:dt/node#6.0.0+20160826120425",

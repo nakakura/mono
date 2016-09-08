@@ -17,11 +17,12 @@ app.get('/', (req: any, res: any)=>{
   res.sendfile('www/index.html');
 });
 
-const item = new Location(1, "nkhr3");
-item.store((err, rows, fields)=>{
-    if(rows['insertId'] === 0) console.log("not inserted");
+const item = new Location("nkhr9");
 
-    Location.load(100, (loc: Location)=>{
+item.store((err, rows, fields)=>{
+    console.error(err);
+
+    Location.searchOrCreate('nkhr4', (loc: Location)=>{
         console.log(loc);
     });
 

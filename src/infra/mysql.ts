@@ -1,8 +1,9 @@
 /// <reference path="../../typings/index.d.ts"/>
 import * as mysql from 'mysql';
 import * as _ from 'lodash';
+import {MySqlIf} from "../bindings/entities";
 
-export class MySqlInstance{
+export class MySqlInstance implements MySqlIf{
   private static _instance: MySqlInstance= null;
 
   constructor(private _connection: mysql.IConnection) {
