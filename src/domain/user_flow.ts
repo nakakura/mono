@@ -2,9 +2,8 @@
 
 import * as _ from 'lodash';
 import {ItemStateManager} from './states/item_states';
-import {LocationStateManager} from "./states/location_states";
 
-export class ItemFlow{
+export class UserFlow{
   private stateHash_: {[key: string]: ItemStateManager} = {};
 
   constructor(){
@@ -12,7 +11,6 @@ export class ItemFlow{
 
   command(name: string, args: any[], cb: (message: string)=>void){
     if(!(name in this.stateHash_)) this.stateHash_[name] = new ItemStateManager();
-
     if(args[0] !== "item"){
       if(!isNaN(args[0])) {
         this.number_(name, parseInt(args[0]), cb);

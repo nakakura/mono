@@ -9,6 +9,10 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true
     },
+    "exclude": [
+      "scripts",
+      "node_modules"
+    ],
     "atom": {
         "rewriteTsconfig": true
     }

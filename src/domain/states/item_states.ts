@@ -13,8 +13,6 @@ export class ItemStateManager{
   }
 
   setState(state: ItemStateTemplate){
-    console.log("setstate");
-    console.log(state);
     this.state = state;
   }
 }
@@ -71,8 +69,6 @@ class ItemStateTemplate{
   }
 
   number(manager: ItemStateManager, id: number, cb: (message: string)=>void){
-    console.log("initial state");
-    console.log(id);
     manager.setState(new InitialState());
   }
 }
@@ -89,8 +85,6 @@ export class DeleteState extends ItemStateTemplate{
   }
 
   number(manager: ItemStateManager, id: number, cb: (message: string)=>void){
-    console.log("delete state");
-    console.log(id);
     if(id === 0){
       cb("やめとくね");
       manager.setState(new InitialState());

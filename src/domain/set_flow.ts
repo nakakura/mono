@@ -4,60 +4,61 @@ import * as _ from 'lodash';
 import {SetStateManager} from './states/set_states';
 
 export class SetFlow{
-  private setStateManager_ = new SetStateManager();
+  private stateHash_: {[key: string]: SetStateManager} = {};
 
   constructor(){
   }
 
-  command(user: string, args: any[], cb: (message: string)=>void){
-    console.log("command");
+  command(name: string, args: any[], cb: (message: string)=>void){
+    if(!(name in this.stateHash_)) this.stateHash_[name] = new SetStateManager();
     if(args[0] !== "set"){
-      console.log("command2");
       if(!isNaN(args[0])) {
-        console.log("command3");
-        this.number_(parseInt(args[0]), cb);
+        this.number_(name, parseInt(args[0]), cb);
       } else {
-        console.log("command4");
-        this.otherCommand_(cb);
+        this.otherCommand_(name, cb);
       }
     } else if(args[1] === "add"){
-      this.add_(args[2], cb);
+      this.add_(name, args[2], cb);
     } else if(args[1] === "search"){
-      this.lookup_(args[2], cb);
+      this.lookup_(name, args[2], cb);
     } else if(args[1] === "delete"){
-      this.delete_(args[2], cb);
+      this.delete_(name, args[2], cb);
     } else if(args[1] === "use"){
-      console.log("item set use====");
-      this.use_(user, args[2], cb);
+      this.use_(name, args[2], cb);
     } else{
-      this.otherCommand_(cb);
+      this.otherCommand_(name, cb);
     }
   }
 
-  private otherCommand_(cb: (message: string)=>void){
-    this.setStateManager_.state.otherCommand(this.setStateManager_);
+  private otherCommand_(name: string, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.otherCommand(manager);
   }
 
-  private add_(title: string, cb: (message: string)=>void){
-    this.setStateManager_.state.add(this.setStateManager_, title, cb);
+  private add_(name: string, title: string, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.add(manager, title, cb);
   }
 
-  private lookup_(title: string, cb: (message: string)=>void){
-    this.setStateManager_.state.lookup(this.setStateManager_, title, cb);
+  private lookup_(name: string, title: string, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.lookup(manager, title, cb);
   }
 
-  private delete_(title: string, cb: (message: string)=>void){
-    this.setStateManager_.state.delete(this.setStateManager_, title, (message: string)=>{
-      console.log(this.setStateManager_.state);
+  private delete_(name: string, title: string, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.delete(manager, title, (message: string)=>{
       cb(message);
     });
   }
 
-  private use_(user: string, title: string, cb: (message: string)=>void){
-    this.setStateManager_.state.use(this.setStateManager_, user, title, cb);
+  private use_(name: string, title: string, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.use(manager, name, title, cb);
   }
 
-  private number_(id: number, cb: (message: string)=>void){
-    this.setStateManager_.state.number(this.setStateManager_, id, cb);
+  private number_(name: string, id: number, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.number(manager, id, cb);
   }
 }

@@ -4,45 +4,45 @@ import * as _ from 'lodash';
 import {UseStateManager} from './states/use_states';
 
 export class UseFlow{
-  private useStateManager_ = new UseStateManager();
+  private stateHash_: {[key: string]: UseStateManager} = {};
 
   constructor(){
   }
 
   command(name: string, args: any[], cb: (message: string)=>void){
-    console.log("command");
+    if(!(name in this.stateHash_)) this.stateHash_[name] = new UseStateManager()
     if(args[0] !== "item"){
-      console.log("command2");
       if(!isNaN(args[0])) {
-        console.log("command3");
-        this.number_(parseInt(args[0]), cb);
+        this.number_(name, parseInt(args[0]), cb);
       } else {
-        console.log("command4");
-        this.otherCommand_(cb);
+        this.otherCommand_(name, cb);
       }
     } else if(args[1] === "use"){
       this.use_(name, args[2], cb);
     } else if(args[1] === "release"){
-      this.release_(args[2], cb);
+      this.release_(name, args[2], cb);
     } else{
-      this.otherCommand_(cb);
+      this.otherCommand_(name, cb);
     }
   }
 
-  private otherCommand_(cb: (message: string)=>void){
-    this.useStateManager_.state.otherCommand(this.useStateManager_);
+  private otherCommand_(name: string, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.otherCommand(manager);
   }
 
   private use_(name: string, title: string, cb: (message: string)=>void){
-    console.log("=====start using");
-    this.useStateManager_.state.use(this.useStateManager_, name, title, cb);
+    const manager = this.stateHash_[name];
+    manager.state.use(manager, name, title, cb);
   }
 
-  private release_(id: number, cb: (message: string)=>void){
-    this.useStateManager_.state.number(this.useStateManager_, id, cb);
+  private release_(name: string, id: number, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.number(manager, id, cb);
   }
 
-  private number_(id: number, cb: (message: string)=>void){
-    this.useStateManager_.state.number(this.useStateManager_, id, cb);
+  private number_(name: string, id: number, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.number(manager, id, cb);
   }
 }

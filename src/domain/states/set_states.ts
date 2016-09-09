@@ -12,8 +12,6 @@ export class SetStateManager{
   }
 
   setState(state: SetStateTemplate){
-    console.log("setstate");
-    console.log(state);
     this.state = state;
   }
 }
@@ -23,7 +21,6 @@ class SetStateTemplate{
   private locationFactory_: (key: any, cb: (loc: Location)=>void)=>void;
 
   add(manager: SetStateManager, title: string, cb: (message: string)=>void){
-    console.log(title);
     Set.searchOrCreate(title, (set: Set)=>{
       if(set.id !== -1) cb("もうあった");
       else{
@@ -41,8 +38,6 @@ class SetStateTemplate{
         cb("そんなものないよ");
       }
       else{
-        console.log("create asking term state");
-        console.log(set);
         manager.setState(new AskingTermState(set, name, cb));
       }
     });
@@ -85,8 +80,6 @@ class SetStateTemplate{
   }
 
   number(manager: SetStateManager, id: number, cb: (message: string)=>void){
-    console.log("initial state");
-    console.log(id);
     manager.setState(new InitialState());
   }
 }
@@ -103,7 +96,6 @@ export class AskingTermState extends SetStateTemplate{
   }
 
   number(manager: SetStateManager, id: number, cb: (message: string)=>void) {
-    console.log("number in set_states");
     let term = 0;
     switch (id) {
       case 1:
@@ -123,12 +115,8 @@ export class AskingTermState extends SetStateTemplate{
     }
 
     if (term > 0) {
-      console.log(this.set_);
       Item.searchSetComponents(this.set_.id, (items: Item[])=> {
-        console.log("term===");
-        console.log(items);
         _.each(items, (item: Item)=> {
-          console.log(item);
           item.user_name = this.name_;
           item.use(term, (err, rows, fields)=> {
             if (err) cb("あかんかった");
@@ -168,8 +156,6 @@ export class DeleteState extends SetStateTemplate{
   }
 
   number(manager: SetStateManager, id: number, cb: (message: string)=>void){
-    console.log("delete state");
-    console.log(id);
     if(id === 0){
       cb("やめとくね");
       manager.setState(new InitialState());

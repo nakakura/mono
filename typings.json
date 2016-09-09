@@ -16,8 +16,6 @@
     "inversify-inject-decorators": "registry:dt/inversify-inject-decorators#1.0.0+20160830145920",
     "mocha": "registry:dt/mocha#2.2.5+20160720003353",
     "mysql": "registry:dt/mysql#0.0.0+20160316155526",
-    "node": "registry:dt/node#6.0.0+20160826120425",
-    "socket.io": "registry:dt/socket.io#1.4.4+20160317120654",
-    "superagent": "registry:dt/superagent#2.0.0+20160811085415"
+    "node": "registry:dt/node#6.0.0+20160826120425"
   }
 }

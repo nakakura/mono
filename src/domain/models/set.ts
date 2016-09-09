@@ -53,11 +53,9 @@ export class Set{
 
   public static lookup(setTitle: string, cb: (loc: Set[])=>void){
     const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
-    console.log("lookup sets");
     mysql.query('SELECT * FROM `sets` WHERE `title` LIKE ?', (error, rows, fields)=>{
       if(rows.length > 0){
         const mapped: Set[] = _.map(rows, (row: any)=>{
-          console.log(row);
           return new Set(row.title, row.set_id);
         });
         cb(mapped);
@@ -69,11 +67,9 @@ export class Set{
 
   public static all(cb: (loc: Set[])=>void){
     const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
-    console.log("lookup sets");
     mysql.query('SELECT * FROM `sets`', (error, rows, fields)=> {
       if (rows.length > 0) {
         const mapped: Set[] = _.map(rows, (row: any)=> {
-          console.log(row);
           return new Set(row.title, row.set_id);
         });
         cb(mapped);

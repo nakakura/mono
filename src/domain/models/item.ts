@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 export class Item{
   public id = -1;
   public user_name = "";
+  public release_date = "";
 
   constructor(public title: string, id?: number, public loc_id?: number, public set_id?: number){
     if(id) this.id = id;
@@ -15,7 +16,6 @@ export class Item{
 
   //fixme
   public static load(id: number, cb: (loc: Item)=>void){
-    console.log("item load");
     const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
     mysql.query('SELECT * FROM `items` WHERE `item_id` = ?', (error, rows, fields)=>{
       if(!error && rows.length > 0){
@@ -29,11 +29,9 @@ export class Item{
   public static searchOrCreate(itemTitle: string, cb: (loc: Item)=>void){
     const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
     mysql.query('SELECT * FROM `items` WHERE `title` = ?', (error, rows, fields)=>{
-      console.log(rows);
       if(error) {
         cb(null);
       } else if(rows.length > 0){
-        console.log(rows);
         cb(new Item(rows[0].title, rows[0].item_id, rows[0].location_id, rows[0].set_id));
       } else{
         cb(new Item(itemTitle));
@@ -44,7 +42,6 @@ export class Item{
   private createNewItem_(cb: (err: Error, rows: any[], fields: any[]) => void){
     const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
     let sql = `INSERT INTO items(title, location_id, set_id) values("${this.title}", ${this.loc_id}, ${this.set_id});`;
-    console.log(sql);
     mysql.query(sql, cb);
   }
 
@@ -72,7 +69,6 @@ export class Item{
   }
 
   public static lookup(itemTitle: string, cb: (loc: Item[])=>void){
-    console.log("lookup items");
     const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
     mysql.query('SELECT * FROM `items` WHERE `title` LIKE ?', (error, rows, fields)=>{
       if(rows.length > 0){
@@ -113,13 +109,8 @@ export class Item{
   }
 
   public static searchSetComponents(set_id: number, cb: (loc: Item[])=>void){
-    console.log("lookup items");
     const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
-    console.log('select ');
-    console.log(set_id);
     mysql.query('SELECT * FROM `items` WHERE `set_id` = ?', (error, rows, fields)=>{
-      console.log("rows");
-      console.log(rows);
       if(rows.length > 0){
         const mapped: Item[] = _.map(rows, (row: any)=>{
           let location_id = -1;
@@ -134,5 +125,27 @@ export class Item{
         cb([]);
       }
     }, [set_id]);
+  }
+
+  public static searchUser(userName: string, cb: (loc: Item[])=>void){
+    const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
+    mysql.query('SELECT * FROM `items` WHERE `user_name` = ?', (error, rows, fields)=>{
+      if(rows.length > 0){
+        const mapped: Item[] = _.map(rows, (row: any)=>{
+          let location_id = -1;
+          if('location_id' in row) location_id = row.location_id;
+          let set_id = -1;
+          if('set_id' in row) set_id = row.set_id;
+          let release_date = "";
+          if('release_date' in row)  release_date = row.release_date;
+          const item = new Item(row.title, row.item_id, location_id, set_id);
+          item.release_date = release_date;
+          return item;
+        });
+        cb(mapped);
+      } else{
+        cb([]);
+      }
+    }, [userName]);
   }
 }

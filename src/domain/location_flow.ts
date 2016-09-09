@@ -9,53 +9,54 @@ import {LocationStateManager} from './states/location_states';
 export class LocationFlow{
   @lazyInject("Factory<LocationIf>")
   private locationFactory_: (key: any, cb: (loc: Location)=>void)=>void;
-  private locationStateManager_ = new LocationStateManager();
+  private stateHash_: {[key: string]: LocationStateManager} = {};
 
   constructor(){
   }
 
-  command(args: any[], cb: (message: string)=>void){
-    console.log("command");
+  command(name: string, args: any[], cb: (message: string)=>void){
+    if(!(name in this.stateHash_)) this.stateHash_[name] = new LocationStateManager();
     if(args[0] !== "location"){
-      console.log("command2");
-     if(!isNaN(args[0])) {
-       console.log("command3");
-       this.number_(parseInt(args[0]), cb);
-     } else {
-       console.log("command4");
-       this.otherCommand_(cb);
-     }
+      if(!isNaN(args[0])) {
+        this.number_(name, parseInt(args[0]), cb);
+      } else {
+        this.otherCommand_(name, cb);
+      }
     } else if(args[1] === "add"){
-      this.add_(args[2], cb);
+      this.add_(name, args[2], cb);
     } else if(args[1] === "search"){
-      this.lookup_(args[2], cb);
+      this.lookup_(name, args[2], cb);
     } else if(args[1] === "delete"){
-      this.delete_(args[2], cb);
+      this.delete_(name, args[2], cb);
     } else{
-      this.otherCommand_(cb);
+      this.otherCommand_(name, cb);
     }
   }
 
-  private otherCommand_(cb: (message: string)=>void){
-    this.locationStateManager_.state.otherCommand(this.locationStateManager_);
+  private otherCommand_(name: string, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.otherCommand(manager);
   }
 
-  private add_(title: string, cb: (message: string)=>void){
-    this.locationStateManager_.state.add(this.locationStateManager_, title, cb);
+  private add_(name: string, title: string, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.add(manager, title, cb);
   }
 
-  private lookup_(title: string, cb: (message: string)=>void){
-    this.locationStateManager_.state.lookup(this.locationStateManager_, title, cb);
+  private lookup_(name: string, title: string, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.lookup(manager, title, cb);
   }
 
-  private delete_(title: string, cb: (message: string)=>void){
-    this.locationStateManager_.state.delete(this.locationStateManager_, title, (message: string)=>{
-      console.log(this.locationStateManager_.state);
+  private delete_(name: string, title: string, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.delete(manager, title, (message: string)=>{
       cb(message);
     });
   }
 
-  private number_(id: number, cb: (message: string)=>void){
-    this.locationStateManager_.state.number(this.locationStateManager_, id, cb);
+  private number_(name: string, id: number, cb: (message: string)=>void){
+    const manager = this.stateHash_[name];
+    manager.state.number(manager, id, cb);
   }
 }

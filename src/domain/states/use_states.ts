@@ -13,8 +13,6 @@ export class UseStateManager{
   }
 
   setState(state: UseStateTemplate){
-    console.log("setstate");
-    console.log(state);
     this.state = state;
   }
 }
@@ -24,7 +22,6 @@ class UseStateTemplate{
 
   use(manager: UseStateManager, name: string, title: string, cb: (message: string)=>void){
     Item.searchOrCreate(title, (item: Item)=> {
-      console.log(item);
       if (item.id === -1) {
         cb("そんなものないよ");
       }
@@ -41,8 +38,6 @@ class UseStateTemplate{
   }
 
   number(manager: UseStateManager, id: number, cb: (message: string)=>void){
-    console.log("initial state");
-    console.log(id);
     manager.setState(new InitialState());
   }
 }

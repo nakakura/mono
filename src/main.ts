@@ -17,9 +17,7 @@ export class Mono{
   }
 
   exec(user: string, args: string[], msg: any){
-    console.log(user);
-    console.log(args);
-    this.locationFlow_.command(args, (message: string)=>{
+    this.locationFlow_.command(user, args, (message: string)=>{
       msg.send(message);
     });
 
@@ -27,7 +25,7 @@ export class Mono{
       msg.send(message);
     });
 
-    this.itemFlow_.command(args, (message: string)=>{
+    this.itemFlow_.command(user, args, (message: string)=>{
       msg.send(message);
     });
 
@@ -37,40 +35,5 @@ export class Mono{
   }
 }
 
-/*
-
- */
-
-/*
-
- item.store((err, rows, fields)=>{
- console.error(err);
-
- Location.searchOrCreate('nkhr4', (loc: Location)=>{
- console.log(loc);
- });
-
- Location.load(101, (loc: Location)=>{
- console.log(loc);
- });
- });
- */
 
 
-
-
-
-/*
-
-item.store((err, rows, fields)=>{
-    console.error(err);
-
-    Location.searchOrCreate('nkhr4', (loc: Location)=>{
-        console.log(loc);
-    });
-
-    Location.load(101, (loc: Location)=>{
-        console.log(loc);
-    });
-});
-*/

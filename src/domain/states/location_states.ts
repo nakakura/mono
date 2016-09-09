@@ -11,8 +11,6 @@ export class LocationStateManager{
   }
 
   setState(state: LocationStateTemplate){
-    console.log("setstate");
-    console.log(state);
     this.state = state;
   }
 }
@@ -22,7 +20,6 @@ class LocationStateTemplate{
   private locationFactory_: (key: any, cb: (loc: Location)=>void)=>void;
 
   add(manager: LocationStateManager, title: string, cb: (message: string)=>void){
-    console.log(title);
     this.locationFactory_(title, (loc: Location)=>{
       if(loc.id !== -1) cb("もうあった");
       else{
@@ -71,8 +68,6 @@ class LocationStateTemplate{
   }
 
   number(manager: LocationStateManager, id: number, cb: (message: string)=>void){
-    console.log("initial state");
-    console.log(id);
     manager.setState(new InitialState());
   }
 }
@@ -103,8 +98,6 @@ export class DeleteState extends LocationStateTemplate{
   }
 
   number(manager: LocationStateManager, id: number, cb: (message: string)=>void){
-    console.log("delete state");
-    console.log(id);
     if(id === 0){
       cb("やめとくね");
       manager.setState(new InitialState());
