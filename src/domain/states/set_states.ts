@@ -1,32 +1,32 @@
 /// <reference path="../../../typings/index.d.ts"/>
 import * as _ from 'lodash';
-import {Location} from '../models/location';
+import {Set} from '../models/set';
 import {kernel, lazyInject} from "../../bindings/inversify_initialize"
 
-export class LocationStateManager{
-  public state: LocationStateTemplate;
+export class SetStateManager{
+  public state: SetStateTemplate;
 
   constructor(){
     this.state = new InitialState();
   }
 
-  setState(state: LocationStateTemplate){
+  setState(state: SetStateTemplate){
     console.log("setstate");
     console.log(state);
     this.state = state;
   }
 }
 
-class LocationStateTemplate{
+class SetStateTemplate{
   @lazyInject("Factory<LocationIf>")
   private locationFactory_: (key: any, cb: (loc: Location)=>void)=>void;
 
-  add(manager: LocationStateManager, title: string, cb: (message: string)=>void){
+  add(manager: SetStateManager, title: string, cb: (message: string)=>void){
     console.log(title);
-    this.locationFactory_(title, (loc: Location)=>{
-      if(loc.id !== -1) cb("もうあった");
+    Set.searchOrCreate(title, (set: Set)=>{
+      if(set.id !== -1) cb("もうあった");
       else{
-        loc.store((err, rows, fields)=>{
+        set.store((err, rows, fields)=>{
           if(err) cb("なんかうまくいかんかった");
           else cb("登録したで");
         });
@@ -34,10 +34,10 @@ class LocationStateTemplate{
     });
   }
 
-  lookup(manager: LocationStateManager, title: string, cb: (message: string)=>void){
-    Location.lookup(title, (items: Location[])=>{
+  lookup(manager: SetStateManager, title: string, cb: (message: string)=>void){
+    Set.lookup(title, (items: Set[])=>{
       if(items.length !== 0){
-        const message = _.reduce(items, (sum: string, item: Location)=>{
+        const message = _.reduce(items, (sum: string, item: Set)=>{
           return `${sum}\n${item.title}`;
         }, "");
         cb(message);
@@ -47,8 +47,8 @@ class LocationStateTemplate{
     });
   }
 
-  delete(manager: LocationStateManager, title: string, cb: (message: string)=>void){
-    Location.lookup(title, (items: Location[])=>{
+  delete(manager: SetStateManager, title: string, cb: (message: string)=>void){
+    Set.lookup(title, (items: Set[])=>{
       if(items.length === 1 && items[0].title === title) {
         items[0].delete((err, rows, fields)=>{
           if(err) cb("消せんかった");
@@ -57,7 +57,7 @@ class LocationStateTemplate{
       } else if(items.length === 0){
         cb("それっぽいのはなかった");
       } else{
-        const message = _.reduce(items, (sum: string, item: Location)=>{
+        const message = _.reduce(items, (sum: string, item: Set)=>{
           return `${sum}\n${item.id}: ${item.title}`;
         }, "どれを消すのや？番号で教えてや(mono 1とか)\n");
         manager.setState(new DeleteState(items));
@@ -66,43 +66,42 @@ class LocationStateTemplate{
     });
   }
 
-  otherCommand(manager: LocationStateManager){
+  otherCommand(manager: SetStateManager){
     manager.setState(new InitialState());
   }
 
-  number(manager: LocationStateManager, id: number, cb: (message: string)=>void){
+  number(manager: SetStateManager, id: number, cb: (message: string)=>void){
     console.log("initial state");
     console.log(id);
     manager.setState(new InitialState());
   }
 }
 
-export class InitialState extends LocationStateTemplate{
-
+export class InitialState extends SetStateTemplate{
 }
 
-export class DeleteState extends LocationStateTemplate{
-  constructor(private locations_: Location[]){
+export class DeleteState extends SetStateTemplate{
+  constructor(private locations_: Set[]){
     super();
   }
 
-  add(manager: LocationStateManager, title: string, cb: (message: string)=>void){
+  add(manager: SetStateManager, title: string, cb: (message: string)=>void){
     manager.setState(new InitialState());
     super.add(manager, title, cb);
   }
 
-  lookup(manager: LocationStateManager, title: string, cb: (message: string)=>void){
+  lookup(manager: SetStateManager, title: string, cb: (message: string)=>void){
     manager.setState(new InitialState());
     super.lookup(manager, title, cb);
   }
 
-  delete(manager: LocationStateManager, title: string, cb: (message: string)=>void){
+  delete(manager: SetStateManager, title: string, cb: (message: string)=>void){
     cb("さっきの件はなかったことに");
     manager.setState(new InitialState());
     super.delete(manager, title, cb);
   }
 
-  number(manager: LocationStateManager, id: number, cb: (message: string)=>void){
+  number(manager: SetStateManager, id: number, cb: (message: string)=>void){
     console.log("delete state");
     console.log(id);
     if(id === 0){

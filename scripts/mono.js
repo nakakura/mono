@@ -20,5 +20,3 @@ module.exports = function (robot) {
   });
 };
 
-console.log(new Mono());
-console.log("mogemoge");

@@ -20,6 +20,12 @@ export class MySqlInstance implements MySqlIf{
       connection.query('CREATE TABLE IF NOT EXISTS locations(location_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, title VARCHAR(128) unique NOT NULL);', (error, results, fields)=>{
           if(error) console.error(error);
       });
+      connection.query('CREATE TABLE IF NOT EXISTS sets(set_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, title VARCHAR(128) unique NOT NULL);', (error, results, fields)=>{
+        if(error) console.error(error);
+      });
+      connection.query('CREATE TABLE IF NOT EXISTS items(item_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, title VARCHAR(256) NOT NULL, user_name VARCHAR(32), location_id INT UNSIGNED, set_id INT UNSIGNED, release_date DATE);', (error, results, fields)=>{
+        if(error) console.error(error);
+      });
       MySqlInstance._instance = new MySqlInstance(connection);
     }
 

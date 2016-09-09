@@ -65,6 +65,20 @@ export class Location{
         }, [`%${locationTitle}%`]);
     }
 
+  public static all(cb: (loc: Location[])=>void){
+    const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
+    mysql.query('SELECT * FROM `locations`;', (error, rows, fields)=> {
+      if (rows.length > 0) {
+        const mapped: Location[] = _.map(rows, (row: any)=> {
+          return new Location(row.title, row.location_id);
+        });
+        cb(mapped);
+      } else{
+        cb([]);
+      }
+    });
+  }
+
     public delete(cb: (err: Error, rows: any[], fields: any[])=> void){
         if(this.id === -1) cb(new Error("not exist"), [], []);
         else{
