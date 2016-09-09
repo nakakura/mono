@@ -23,7 +23,7 @@ export class Mono{
       msg.send(message);
     });
 
-    this.setFlow_.command(args, (message: string)=>{
+    this.setFlow_.command(user, args, (message: string)=>{
       msg.send(message);
     });
 

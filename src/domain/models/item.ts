@@ -111,4 +111,28 @@ export class Item{
     const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
     mysql.query('UPDATE items SET `user_name` = ?, `release_date` = ? WHERE `item_id` = ?', cb, [this.user_name, dateString, this.id]);
   }
+
+  public static searchSetComponents(set_id: number, cb: (loc: Item[])=>void){
+    console.log("lookup items");
+    const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
+    console.log('select ');
+    console.log(set_id);
+    mysql.query('SELECT * FROM `items` WHERE `set_id` = ?', (error, rows, fields)=>{
+      console.log("rows");
+      console.log(rows);
+      if(rows.length > 0){
+        const mapped: Item[] = _.map(rows, (row: any)=>{
+          let location_id = -1;
+          if('location_id' in row) location_id = row.location_id;
+          let set_id = -1;
+          if('set_id' in row) set_id = row.set_id;
+
+          return new Item(row.title, row.item_id, location_id, set_id);
+        });
+        cb(mapped);
+      } else{
+        cb([]);
+      }
+    }, [set_id]);
+  }
 }
