@@ -31,11 +31,13 @@ export class LocationFlow{
       this.lookup_(args[2], cb);
     } else if(args[1] === "delete"){
       this.delete_(args[2], cb);
+    } else{
+      this.otherCommand_(cb);
     }
   }
 
   private otherCommand_(cb: (message: string)=>void){
-
+    this.locationStateManager_.state.otherCommand(this.locationStateManager_);
   }
 
   private add_(title: string, cb: (message: string)=>void){

@@ -98,4 +98,17 @@ export class Item{
       mysql.query('delete FROM `items` WHERE `item_id` = ?', cb, [this.id]);
     }
   }
+
+  public use(term: number, cb: (err: Error, rows: any[], fields: any[])=> void){
+    let date = new Date();
+    date.setDate(date.getDate() + term);
+    if(date.getDay() === 0) date.setDate(date.getDate() + 1);
+    else if(date.getDay() === 6) date.setDate(date.getDate() + 2);
+    var dateFormat = require('dateformat');
+    let dateString = dateFormat(date, "yyyy-mm-dd");
+
+    let query = `UPDATE items SET user_name = "${this.user_name}", release_date = "${dateString}" WHERE id = ${this.id}`;
+    const mysql = kernel.get<MySqlIf>(TYPES.MySqlIf);
+    mysql.query('UPDATE items SET `user_name` = ?, `release_date` = ? WHERE `item_id` = ?', cb, [this.user_name, dateString, this.id]);
+  }
 }
